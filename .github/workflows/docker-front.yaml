@@ -1,0 +1,27 @@
+name: Build and Push Docker Image
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build the Docker image
+        run: docker build -f frontend/Dockerfile -t ghcr.io/wladimirlct/projet-dep-auto-m2:${{ github.sha }} ./frontend
+
+      - name: Install and run Container Structure Tests
+        run: |
+          curl -LO https://github.com/GoogleContainerTools/container-structure-test/releases/latest/download/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          mkdir -p $HOME/bin
+          export PATH=$PATH:$HOME/bin
+          mv container-structure-test-linux-amd64 $HOME/bin/container-structure-test
+          container-structure-test test --image ghcr.io/wladimirlct/projet-dep-auto-m2:${{ github.sha }} --config frontend/tests/cst-basic.yaml
+
+      - name: Log in to the registry
+        run: docker login ghcr.io -u ${{ secrets.GITHUB_TOKEN }} -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push the Docker image
+        run: docker push ghcr.io/wladimirlct/projet-dep-auto-m2:${{ github.sha }}

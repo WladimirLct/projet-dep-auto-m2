@@ -1,0 +1,43 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - 8500:8500
+    environment:
+      - REST_API_SERVICE_NAME=backend-rest:9000
+    depends_on:
+      - backend-rest
+    networks:
+      - frontend
+
+  backend-rest:
+    build:
+      context: ./backend/rest-api
+      dockerfile: Dockerfile
+    container_name: backend-rest
+    # ports:
+    #   - 9000:9000
+    environment:
+      - INFERENCE_API_SERVICE_NAME=backend-inference:8000
+    depends_on:
+      - backend-inference
+    networks:
+      - frontend
+      - backend
+
+  backend-inference:
+    build:
+      context: ./backend/onnx-inference
+      dockerfile: Dockerfile
+    container_name: backend-inference
+    # ports:
+    #   - 8000:8000
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:

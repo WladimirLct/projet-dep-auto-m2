@@ -1,0 +1,48 @@
+schemaVersion: 2.0.0
+fileExistenceTests:
+  - name: main file
+    path: /app/main.py
+    shouldExist: true
+  - name: venv directory
+    path: /app/.venv
+    shouldExist: true
+  - name: uv binary
+    path: /usr/local/bin/uv
+    shouldExist: false
+  - name: uv.lock file
+    path: /app/uv.lock
+    shouldExist: false
+  - name: pyproject.toml file
+    path: /app/pyproject.toml
+    shouldExist: false
+
+commandTests:
+  - name: python version
+    command: python
+    args: [--version]
+    expectedOutput: [Python 3.12.*]
+  - name: python path
+    command: which
+    args: [python]
+    expectedOutput: [app/.venv/bin/python*]
+  - name: whoami
+    command: whoami
+    expectedOutput: [nonroot]
+  - name: check user id
+    command: id
+    args: [-u]
+    expectedOutput: [65532]
+  - name: check group id
+    command: id
+    args: [-g]
+    expectedOutput: [65532]
+
+metadataTest:
+  workdir: /app
+  exposedPorts: ["8500"]
+  envVars:
+    - key: PATH
+      value: /app/.venv/bin.*
+      isRegex: true
+    - key: PYTHONPATH
+      value: "app/.venv/lib/python/site-packages"
