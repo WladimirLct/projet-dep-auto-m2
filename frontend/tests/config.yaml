@@ -45,4 +45,4 @@ metadataTest:
       value: /app/.venv/bin.*
       isRegex: true
     - key: PYTHONPATH
-      value: "/app/.venv/lib/python/site-packages"
+      value: "/app/.venv/bin/python/site-packages"
