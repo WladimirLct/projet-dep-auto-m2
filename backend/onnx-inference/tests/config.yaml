@@ -4,11 +4,11 @@ fileExistenceTests:
   - name: Check main.py exists
     path: /app/main.py
     shouldExist: true
-  
+
   - name: Check convert-onnx.py does not exist
     path: /app/convert-onnx.py
     shouldExist: false
-  
+
   - name: Check model folder exists
     path: /app/model
     shouldExist: true
@@ -16,23 +16,23 @@ fileExistenceTests:
   - name: Check model file exists
     path: /app/model/yolo11.onnx
     shouldExist: true
-  
+
   - name: Check .venv folder exists
     path: /app/.venv
     shouldExist: true
-  
+
   - name: Check uv binary does not exist
     path: /usr/local/bin/uv
     shouldExist: false
-  
+
   - name: Check uv.lock does not exist
     path: uv.lock
     shouldExist: false
-  
+
   - name: Check pyproject.toml does not exist
     path: pyproject.toml
     shouldExist: false
-    
+
 commandTests:
   - name: Check Python version
     command: python

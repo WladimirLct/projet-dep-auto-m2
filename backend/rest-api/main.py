@@ -1,12 +1,12 @@
 from fastapi import FastAPI, status
 from routes import infer
-import uvicorn
 
 app = FastAPI(title="YOLO REST API Gateway")
 
 # Update this URL to match your inference API endpoint
 
 app.include_router(infer.router)
+
 
 @app.get(
     "/healthcheck",

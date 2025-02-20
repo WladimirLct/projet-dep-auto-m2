@@ -22,7 +22,7 @@ fileExistenceTests:
   - name: Check pyproject.toml does not exist
     path: pyproject.toml
     shouldExist: false
-    
+
 
 commandTests:
   - name: Check Python version

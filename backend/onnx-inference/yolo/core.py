@@ -3,25 +3,95 @@
 # License: MIT License
 # Email: sihabsahariarcse@gmail.com
 
-import argparse
-import os
-import sys
-import os.path as osp
+from math import exp
+
 import cv2
 import numpy as np
 import onnxruntime as ort
-from math import exp
 
 # Constants and configurations
-CLASSES = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
-           'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
-           'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
-           'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
-           'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
-           'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
-           'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
-           'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
-           'hair drier', 'toothbrush']
+CLASSES = [
+    "person",
+    "bicycle",
+    "car",
+    "motorcycle",
+    "airplane",
+    "bus",
+    "train",
+    "truck",
+    "boat",
+    "traffic light",
+    "fire hydrant",
+    "stop sign",
+    "parking meter",
+    "bench",
+    "bird",
+    "cat",
+    "dog",
+    "horse",
+    "sheep",
+    "cow",
+    "elephant",
+    "bear",
+    "zebra",
+    "giraffe",
+    "backpack",
+    "umbrella",
+    "handbag",
+    "tie",
+    "suitcase",
+    "frisbee",
+    "skis",
+    "snowboard",
+    "sports ball",
+    "kite",
+    "baseball bat",
+    "baseball glove",
+    "skateboard",
+    "surfboard",
+    "tennis racket",
+    "bottle",
+    "wine glass",
+    "cup",
+    "fork",
+    "knife",
+    "spoon",
+    "bowl",
+    "banana",
+    "apple",
+    "sandwich",
+    "orange",
+    "broccoli",
+    "carrot",
+    "hot dog",
+    "pizza",
+    "donut",
+    "cake",
+    "chair",
+    "couch",
+    "potted plant",
+    "bed",
+    "dining table",
+    "toilet",
+    "tv",
+    "laptop",
+    "mouse",
+    "remote",
+    "keyboard",
+    "cell phone",
+    "microwave",
+    "oven",
+    "toaster",
+    "sink",
+    "refrigerator",
+    "book",
+    "clock",
+    "vase",
+    "scissors",
+    "teddy bear",
+    "hair drier",
+    "toothbrush",
+]
 
 
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
@@ -46,7 +116,7 @@ class DetectBox:
 
 
 class ONNXYOLODetector:
-    def __init__(self, model_path='./yolov11n.onnx', conf_thresh=0.5, iou_thresh=0.45):
+    def __init__(self, model_path="./yolov11n.onnx", conf_thresh=0.5, iou_thresh=0.45):
         self.model_path = model_path
         self.conf_thresh = conf_thresh
         self.iou_thresh = iou_thresh
@@ -59,7 +129,9 @@ class ONNXYOLODetector:
 
     @staticmethod
     def preprocess_image(img_src, resize_w, resize_h):
-        image = cv2.resize(img_src, (resize_w, resize_h), interpolation=cv2.INTER_LINEAR)
+        image = cv2.resize(
+            img_src, (resize_w, resize_h), interpolation=cv2.INTER_LINEAR
+        )
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = image.astype(np.float32)
         image /= 255.0
@@ -98,10 +170,14 @@ class ONNXYOLODetector:
                 for j in range(i + 1, len(sort_detectboxs), 1):
                     if sort_detectboxs[i].classId == sort_detectboxs[j].classId:
                         iou = self.iou(
-                            sort_detectboxs[i].xmin, sort_detectboxs[i].ymin,
-                            sort_detectboxs[i].xmax, sort_detectboxs[i].ymax,
-                            sort_detectboxs[j].xmin, sort_detectboxs[j].ymin,
-                            sort_detectboxs[j].xmax, sort_detectboxs[j].ymax
+                            sort_detectboxs[i].xmin,
+                            sort_detectboxs[i].ymin,
+                            sort_detectboxs[i].xmax,
+                            sort_detectboxs[i].ymax,
+                            sort_detectboxs[j].xmin,
+                            sort_detectboxs[j].ymin,
+                            sort_detectboxs[j].xmax,
+                            sort_detectboxs[j].ymax,
                         )
                         if iou > self.iou_thresh:
                             sort_detectboxs[j].classId = -1
@@ -165,12 +241,10 @@ class ONNXYOLODetector:
 
         return boxes, scores, class_ids
 
-
-
-    def draw_detections(self,image, boxes, scores, class_ids, mask_alpha=0.3):
+    def draw_detections(self, image, boxes, scores, class_ids, mask_alpha=0.3):
         """
         Combines drawing masks, boxes, and text annotations on detected objects.
-        
+
         Parameters:
         - image: Input image.
         - boxes: Array of bounding boxes.
@@ -193,25 +267,37 @@ class ONNXYOLODetector:
 
             # Draw fill rectangle for mask
             cv2.rectangle(mask_img, (x1, y1), (x2, y2), color, -1)
-            
+
             # Draw bounding box
             cv2.rectangle(det_img, (x1, y1), (x2, y2), color, 2)
 
             # Prepare text (label and score)
             label = CLASSES[class_id]
-            caption = f'{label} {int(score * 100)}%'
-            
+            caption = f"{label} {int(score * 100)}%"
+
             # Calculate text size and position
-            (tw, th), _ = cv2.getTextSize(text=caption, fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                        fontScale=font_size, thickness=text_thickness)
+            (tw, th), _ = cv2.getTextSize(
+                text=caption,
+                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale=font_size,
+                thickness=text_thickness,
+            )
             th = int(th * 1.2)
-            
+
             # Draw filled rectangle for text background
             cv2.rectangle(det_img, (x1, y1), (x1 + tw, y1 - th), color, -1)
-            
+
             # Draw text over the filled rectangle
-            cv2.putText(det_img, caption, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, font_size,
-                        (255, 255, 255), text_thickness, cv2.LINE_AA)
+            cv2.putText(
+                det_img,
+                caption,
+                (x1, y1),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                font_size,
+                (255, 255, 255),
+                text_thickness,
+                cv2.LINE_AA,
+            )
 
         # Blend the mask image with the original image
         det_img = cv2.addWeighted(mask_img, mask_alpha, det_img, 1 - mask_alpha, 0)

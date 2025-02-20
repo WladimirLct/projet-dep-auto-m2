@@ -1,17 +1,19 @@
-import cv2
-import uvicorn
-import numpy as np
 import base64
-import onnxruntime as ort
+
+import cv2
+import numpy as np
 from fastapi import FastAPI, File, UploadFile
 from yolo.core import ONNXYOLODetector
 
 # Load the YOLO ONNX model
-model_path = 'model/yolo11.onnx'
-yolov11_detector = ONNXYOLODetector(model_path=model_path, conf_thresh=0.1, iou_thresh=0.45)
+model_path = "model/yolo11.onnx"
+yolov11_detector = ONNXYOLODetector(
+    model_path=model_path, conf_thresh=0.1, iou_thresh=0.45
+)
 
 # Create the FastAPI app
 app = FastAPI(title="YOLO ONNX Inference API")
+
 
 @app.post("/infer")
 async def infer(file: UploadFile = File(...)):
@@ -29,7 +31,7 @@ async def infer(file: UploadFile = File(...)):
     frame = yolov11_detector.draw_detections(image, boxes, scores, class_ids)
 
     # Encode the annotated image as JPEG
-    ret, buffer = cv2.imencode('.jpg', frame)
+    ret, buffer = cv2.imencode(".jpg", frame)
     if not ret:
         return {"error": "Failed to encode image"}
 
