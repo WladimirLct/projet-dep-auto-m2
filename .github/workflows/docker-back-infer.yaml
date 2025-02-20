@@ -18,7 +18,7 @@ jobs:
           mkdir -p $HOME/bin
           export PATH=$PATH:$HOME/bin
           mv container-structure-test-linux-amd64 $HOME/bin/container-structure-test
-          container-structure-test test --image ghcr.io/wladimirlct/projet-dep-auto-m2:${{ github.sha }} --config backend/onnx-inference/config.yaml
+          container-structure-test test --image ghcr.io/wladimirlct/projet-dep-auto-m2:${{ github.sha }} --config backend/onnx-inference/tests/config.yaml
 
       - name: Log in to the registry
         run: docker login ghcr.io -u ${{ secrets.GITHUB_TOKEN }} -p ${{ secrets.GITHUB_TOKEN }}
