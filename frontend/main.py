@@ -8,9 +8,8 @@ from PIL import Image
 
 rest_api_url = os.getenv("REST_API_SERVICE_NAME")
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="LUCET - Projet CI/CD")
 st.title("Projet CI/CD")
-st.set_page_config(page_title="LUCET - Projet CI/CD")
 
 # Compact upload section
 cols = st.columns([4, 1])
