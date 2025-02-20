@@ -9,7 +9,7 @@ from PIL import Image
 rest_api_url = os.getenv("REST_API_SERVICE_NAME")
 
 st.set_page_config(layout="wide")
-st.title("Image Inference App")
+st.title("Projet CI/CD")
 
 # Compact upload section
 cols = st.columns([4, 1])
