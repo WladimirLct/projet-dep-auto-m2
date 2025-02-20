@@ -3,11 +3,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: frontend
+    container_name: frontend_project_CICD
     ports:
       - 8500:8500
     environment:
-      - REST_API_SERVICE_NAME=backend-rest:9000
+      - REST_API_SERVICE_NAME=rest_backend_project_CICD:9000
     depends_on:
       - backend-rest
     networks:
@@ -17,11 +17,11 @@ services:
     build:
       context: ./backend/rest-api
       dockerfile: Dockerfile
-    container_name: backend-rest
+    container_name: rest_backend_project_CICD
     # ports:
     #   - 9000:9000
     environment:
-      - INFERENCE_API_SERVICE_NAME=backend-inference:8000
+      - INFERENCE_API_SERVICE_NAME=inference_backend_project_CICD:8000
     depends_on:
       - backend-inference
     networks:
@@ -32,7 +32,7 @@ services:
     build:
       context: ./backend/onnx-inference
       dockerfile: Dockerfile
-    container_name: backend-inference
+    container_name: inference_backend_project_CICD
     # ports:
     #   - 8000:8000
     networks:
