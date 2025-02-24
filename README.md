@@ -18,6 +18,7 @@
    1. Shared networks
    2. Dependence on other services
    3. Environment variables
+(This project used Conventionnal Commits)
 
 # Structure
 ## Frontend
