@@ -6,7 +6,7 @@
 # Run the stack
 1. Run `docker compose build`
 2. Run `docker compose up -d`
-3. Go to the
+3. Go to the url in the logs of the frontend (should be `http://frontend_project_CICD:8500` on the "frontend" network)
 
 # CI/CD
 1. Pre-commits
